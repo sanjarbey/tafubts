@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sonlarni tartiblash o‘yini</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f9f9f9;
+      padding: 30px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    #number-list {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .number-box {
+      width: 50px;
+      height: 50px;
+      background-color: #2196f3;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 20px;
+      border-radius: 6px;
+      cursor: grab;
+    }
+
+    .drag-over {
+      outline: 3px dashed #ff9800;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🔢 Sonlarni tartib bilan joylang (1 dan 10 gacha)</h2>
+  <div id="number-list"></div>
+  <button onclick="checkOrder()">Tekshirish</button>
+  <div class="result" id="result"></div>
+
+  <script>
+    const numberList = document.getElementById("number-list");
+    const resultEl = document.getElementById("result");
+
+    // Random tartiblangan sonlar
+    let numbers = Array.from({ length: 10 }, (_, i) => i + 1)
+      .sort(() => Math.random() - 0.5);
+
+    function renderNumbers() {
+      numberList.innerHTML = "";
+      numbers.forEach(num => {
+        const div = document.createElement("div");
+        div.className = "number-box";
+        div.draggable = true;
+        div.textContent = num;
+
+        // Drag and drop events
+        div.addEventListener("dragstart", handleDragStart);
+        div.addEventListener("dragover", handleDragOver);
+        div.addEventListener("drop", handleDrop);
+
+        numberList.appendChild(div);
+      });
+    }
+
+    let dragged;
+
+    function handleDragStart(e) {
+      dragged = e.target;
+    }
+
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.target.classList.add("drag-over");
+    }
+
+    function handleDrop(e) {
+      e.preventDefault();
+      e.target.classList.remove("drag-over");
+
+      if (dragged && e.target !== dragged) {
+        const draggedIndex = [...numberList.children].indexOf(dragged);
+        const targetIndex = [...numberList.children].indexOf(e.target);
+
+        // joyini almashtirish
+        numberList.insertBefore(dragged, targetIndex > draggedIndex ? e.target.nextSibling : e.target);
+      }
+    }
+
+    function checkOrder() {
+      const current = [...numberList.children].map(div => +div.textContent);
+      const isCorrect = current.every((val, idx) => val === idx + 1);
+
+      resultEl.textContent = isCorrect
+        ? "✅ Ajoyib! Hammasi tartibda!"
+        : "❌ Xato. Yana urinib ko‘ring.";
+    }
+
+    renderNumbers();
+  </script>
+
+</body>
+</html>

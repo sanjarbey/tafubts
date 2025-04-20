@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sonni Top O‘yini</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .game-container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    input {
+      padding: 10px;
+      font-size: 18px;
+      width: 80px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin-top: 10px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 8px;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 20px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-container">
+    <h2>Kompyuter o‘ylagan sonni toping! (1 dan 10 gacha)</h2>
+    <input type="number" id="guessInput" min="1" max="10" />
+    <br />
+    <button onclick="checkGuess()">Taxmin qilish</button>
+    <div class="message" id="message"></div>
+    <div class="message" id="attemptsDisplay"></div>
+  </div>
+
+  <script>
+    const randomNumber = Math.floor(Math.random() * 10) + 1;
+    let attempts = 0;
+
+    function checkGuess() {
+      const userGuess = parseInt(document.getElementById('guessInput').value);
+      const message = document.getElementById('message');
+      const attemptsDisplay = document.getElementById('attemptsDisplay');
+      attempts++;
+
+      if (isNaN(userGuess) || userGuess < 1 || userGuess > 10) {
+        message.textContent = "Iltimos, 1 dan 10 gacha bo‘lgan son kiriting.";
+        attempts--; // noto‘g‘ri kiritilganda hisobga olinmasin
+        return;
+      }
+
+      if (userGuess === randomNumber) {
+        message.textContent = `🎉 To‘g‘ri topdingiz! Son: ${randomNumber}`;
+      } else if (userGuess < randomNumber) {
+        message.textContent = "❗ Kattaroq son kiriting.";
+      } else {
+        message.textContent = "❗ Kichikroq son kiriting.";
+      }
+
+      attemptsDisplay.textContent = `🔁 Urinishlar soni: ${attempts}`;
+    }
+  </script>
+
+</body>
+</html>

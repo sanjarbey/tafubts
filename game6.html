@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <title>Shakllarni Sanash</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f8ff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .shapes-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 30px;
+      min-height: 200px;
+    }
+
+    .shape {
+      width: 50px;
+      height: 50px;
+    }
+
+    .circle {
+      border-radius: 50%;
+      background: red;
+    }
+
+    .square {
+      background: blue;
+    }
+
+    .triangle {
+      width: 0;
+      height: 0;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+      border-bottom: 50px solid green;
+      background: none;
+    }
+
+    .star {
+      width: 0;
+      height: 0;
+      background: none;
+      position: relative;
+    }
+
+    .star::before, .star::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-left: 25px solid transparent;
+      border-right: 25px solid transparent;
+    }
+
+    .star::before {
+      border-bottom: 50px solid gold;
+    }
+
+    .star::after {
+      border-top: 50px solid gold;
+      top: 25px;
+    }
+
+    input {
+      width: 50px;
+      padding: 5px;
+      margin: 5px;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .result {
+      font-size: 20px;
+      margin-top: 20px;
+      color: darkgreen;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🔺 Shakllarni Sanang 🔵</h2>
+  <div class="shapes-container" id="shapes"></div>
+
+  <div>
+    🔴 Doira: <input type="number" id="circle">
+    🟦 Kvadrat: <input type="number" id="square">
+    🟢 Uchburchak: <input type="number" id="triangle">
+    ⭐ Yulduz: <input type="number" id="star">
+  </div>
+
+  <button onclick="checkShapes()">Tekshirish</button>
+  <div class="result" id="result"></div>
+
+  <script>
+    const shapeContainer = document.getElementById("shapes");
+    const resultEl = document.getElementById("result");
+    const shapeTypes = ["circle", "square", "triangle", "star"];
+    const actualCounts = { circle: 0, square: 0, triangle: 0, star: 0 };
+
+    function generateShapes() {
+      shapeContainer.innerHTML = "";
+      shapeTypes.forEach(type => actualCounts[type] = 0); // tozalash
+
+      const totalShapes = Math.floor(Math.random() * 16) + 10; // 10–25 ta
+      for (let i = 0; i < totalShapes; i++) {
+        const type = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+        const shape = document.createElement("div");
+        shape.classList.add("shape", type);
+        shapeContainer.appendChild(shape);
+        actualCounts[type]++;
+      }
+    }
+
+    function checkShapes() {
+      let correct = 0;
+
+      shapeTypes.forEach(type => {
+        const userInput = parseInt(document.getElementById(type).value);
+        if (userInput === actualCounts[type]) {
+          correct++;
+        }
+      });
+
+      if (correct === shapeTypes.length) {
+        resultEl.textContent = "✅ Barchasi to‘g‘ri! Ajoyib!";
+      } else {
+        resultEl.textContent = `❌ ${shapeTypes.length - correct} ta xato bor. Yana urinib ko‘ring.`;
+      }
+    }
+
+    generateShapes();
+  </script>
+
+</body>
+</html>

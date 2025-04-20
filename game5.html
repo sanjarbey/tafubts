@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <title>Shakl burchaklari o‘yini</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f0f8ff;
+      padding: 20px;
+    }
+
+    .game-area {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .shape-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    svg {
+      width: 80px;
+      height: 80px;
+    }
+
+    .drop-zone {
+      width: 50px;
+      height: 40px;
+      border: 2px dashed #aaa;
+      margin-top: 10px;
+      font-size: 18px;
+      line-height: 40px;
+      background: #fff;
+    }
+
+    .numbers {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .number {
+      width: 50px;
+      height: 40px;
+      background: #2196f3;
+      color: white;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+      cursor: grab;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #4caf50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      color: darkgreen;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📐 Shakl burchaklariga mos raqamlarni joylashtiring</h2>
+
+  <div class="game-area" id="gameArea"></div>
+
+  <div class="numbers" id="numberPool"></div>
+
+  <button onclick="checkAnswers()">Tekshirish</button>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    const shapes = [
+      { name: '3', points: 3, svg: '<polygon points="40,10 10,70 70,70" fill="orange"/>' },
+      { name: '4', points: 4, svg: '<rect width="70" height="70" x="5" y="5" fill="blue"/>' },
+      { name: '5', points: 5, svg: '<polygon points="40,5 75,30 60,70 20,70 5,30" fill="green"/>' },
+      { name: '6', points: 6, svg: '<polygon points="40,5 70,25 70,55 40,75 10,55 10,25" fill="purple"/>' },
+      { name: '7', points: 7, svg: '<polygon points="40,0 70,10 80,40 70,70 40,80 10,70 0,40 10,10" fill="#f44336"/>' },
+      { name: '8', points: 8, svg: '<polygon points="30,0 50,0 70,20 70,40 50,60 30,60 10,40 10,20" fill="#9c27b0"/>' },
+      { name: '9', points: 9, svg: '<polygon points="40,0 60,10 70,30 70,50 60,70 40,80 20,70 10,50 10,30 20,10" fill="#00bcd4"/>' },
+      { name: '10', points: 10, svg: '<polygon points="40,0 60,10 70,30 70,50 60,70 40,80 20,70 10,50 10,30 20,10" fill="#607d8b"/>' }
+    ];
+
+    let selectedShapes = [];
+    let numberPool = [];
+
+    function initGame() {
+      const gameArea = document.getElementById('gameArea');
+      const numberDiv = document.getElementById('numberPool');
+      const resultDiv = document.getElementById('result');
+      resultDiv.textContent = "";
+
+      selectedShapes = shapes.sort(() => 0.5 - Math.random()).slice(0, 8); // 8 ta shakl
+      numberPool = selectedShapes.map(s => s.points).sort(() => Math.random() - 0.5);
+
+      gameArea.innerHTML = '';
+      numberDiv.innerHTML = '';
+
+      selectedShapes.forEach(shape => {
+        const shapeBox = document.createElement('div');
+        shapeBox.className = 'shape-box';
+        shapeBox.innerHTML = `
+          <svg viewBox="0 0 80 80">${shape.svg}</svg>
+          <div class="drop-zone" data-answer="${shape.points}" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+        `;
+        gameArea.appendChild(shapeBox);
+      });
+
+      numberPool.forEach(num => {
+        const div = document.createElement('div');
+        div.className = 'number';
+        div.textContent = num;
+        div.draggable = true;
+        div.ondragstart = drag;
+        numberDiv.appendChild(div);
+      });
+    }
+
+    function allowDrop(e) {
+      e.preventDefault();
+    }
+
+    function drag(e) {
+      e.dataTransfer.setData("text", e.target.textContent);
+    }
+
+    function drop(e) {
+      e.preventDefault();
+      const data = e.dataTransfer.getData("text");
+      e.target.textContent = data;
+    }
+
+    function checkAnswers() {
+      const dropZones = document.querySelectorAll('.drop-zone');
+      let correct = 0;
+
+      dropZones.forEach(zone => {
+        if (parseInt(zone.textContent) === parseInt(zone.dataset.answer)) {
+          correct++;
+        }
+      });
+
+      document.getElementById('result').textContent = correct === dropZones.length
+        ? "✅ Zo‘r! Barchasi to‘g‘ri!"
+        : `❌ ${dropZones.length - correct} ta xato bor. Yana urinib ko‘ring.`;
+    }
+
+    initGame();
+  </script>
+
+</body>
+</html>

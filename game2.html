@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Matematik Topshiriqlar</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #e3f2fd;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 600px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .question {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+    input {
+      width: 60px;
+      padding: 5px;
+      font-size: 16px;
+      text-align: center;
+    }
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 18px;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .result {
+      text-align: center;
+      font-size: 20px;
+      margin-top: 15px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>🧠 Matematik Topshiriqlar</h2>
+  <div id="quiz"></div>
+  <button onclick="checkAnswers()">Tekshirish</button>
+  <div class="result" id="result"></div>
+</div>
+
+<script>
+  const quizContainer = document.getElementById("quiz");
+  const resultContainer = document.getElementById("result");
+
+  const operators = ["+", "-", "*"];
+  let questions = [];
+
+  function generateQuestions() {
+  questions = []; // eski savollarni tozalaymiz
+  for (let i = 0; i < 10; i++) {
+    let num1, num2, result;
+    const op = operators[Math.floor(Math.random() * operators.length)];
+    const missing = Math.floor(Math.random() * 3); // 0: num1, 1: num2, 2: result
+
+    if (op === "/") {
+      // ✅ Bo‘linma: butun natija va ≤ 10
+      result = Math.floor(Math.random() * 10) + 1;      // 1–10
+      num2 = Math.floor(Math.random() * 9) + 1;         // 1–9
+      num1 = result * num2;
+    } 
+
+    else if (op === "-") {
+      
+      // ✅ Ayirma: musbat bo‘lsin
+      num1 = Math.floor(Math.random() * 10) + 1;
+      num2 = Math.floor(Math.random() * 10) + 1;
+      if (num1 < num2) {
+        [num1, num2] = [num2, num1];
+      }
+    } 
+
+
+    else if (op === "*") {
+      // ✅ Ko‘paytma: natija ≤ 10
+      do {
+        num1 = Math.floor(Math.random() * 10) + 1;
+        num2 = Math.floor(Math.random() * 10) + 1;
+        result = num1 * num2;
+      } while (result > 10);
+    } else {
+      // Qo‘shish uchun oddiy
+      num1 = Math.floor(Math.random() * 10) + 1;
+      num2 = Math.floor(Math.random() * 10) + 1;
+    }
+
+    // Natijani hisoblaymiz (agar hali hisoblanmagan bo‘lsa)
+    if (op !== "*") {
+      switch (op) {
+        case "+": result = num1 + num2; break;
+        case "-": result = num1 - num2; break;
+        case "*": result = num1 * num2; break;
+        case "/": result = +(num1 / num2).toFixed(2); break;
+      }
+    }
+
+    questions.push({ num1, num2, op, result, missing });
+  }
+}
+
+
+  function renderQuestions() {
+    quizContainer.innerHTML = "";
+    questions.forEach((q, index) => {
+      let html = "";
+      if (q.missing === 0) {
+        html = `<input type="text" id="q${index}"> ${q.op} ${q.num2} = ${q.result}`;
+      } else if (q.missing === 1) {
+        html = `${q.num1} ${q.op} <input type="text" id="q${index}"> = ${q.result}`;
+      } else {
+        html = `${q.num1} ${q.op} ${q.num2} = <input type="text" id="q${index}">`;
+      }
+
+      quizContainer.innerHTML += `<div class="question">${index + 1}) ${html}</div>`;
+    });
+  }
+
+  function checkAnswers() {
+    let correct = 0;
+
+    questions.forEach((q, index) => {
+      const userInput = document.getElementById(`q${index}`).value;
+      let correctAnswer;
+      switch (q.missing) {
+        case 0: correctAnswer = q.num1; break;
+        case 1: correctAnswer = q.num2; break;
+        case 2: correctAnswer = q.result; break;
+      }
+
+      // floatlar uchun aniqlik
+      if (q.op === "/") {
+        if (Math.abs(parseFloat(userInput) - correctAnswer) < 0.01) {
+          correct++;
+        }
+      } else if (parseInt(userInput) === correctAnswer) {
+        correct++;
+      }
+    });
+
+    resultContainer.textContent = `✅ To‘g‘ri javoblar soni: ${correct} / 10`;
+  }
+
+  generateQuestions();
+  renderQuestions();
+</script>
+
+</body>
+</html>
