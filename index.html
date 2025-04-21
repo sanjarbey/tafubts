@@ -3,19 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Matematika va geometrik interaktiv o'yinlar: qo‘shish, ayirish, ko‘paytirish, shakllar va boshqalar. Bolalar uchun qiziqarli mashg‘ulotlar!">
+
   <title>Interaktiv O'yinlar</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
-      background: #f7f7f7;
-      margin: 0;
-      padding: 0;
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+          font-family: 'Arial', sans-serif;
+          background: url('https://undraw.co/api/illustrations/preview?type=education&theme=light') no-repeat center center fixed;
+          background-size: cover;
+          margin: 0;
+          padding: 0;
+          color: #333;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+        }
+
 
     .container {
       text-align: center;
@@ -40,11 +44,11 @@
     }
 
     .game-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 20px;
-    }
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 20px;
+      }
 
     .game-buttons a {
       display: block;
@@ -56,10 +60,13 @@
       font-size: 20px;
       border-radius: 8px;
       transition: background-color 0.3s ease;
+      transition: all 0.2s ease-in-out;
+      transform: scale(1);
     }
 
     .game-buttons a:hover {
       background: #1976d2;
+      transform: scale(1.05);
     }
 
     footer {
@@ -100,7 +107,7 @@
     </div>
 
     <footer>
-      <p>Yaratgan: <a href="https://github.com/" target="_blank">Sizning Ismingiz</a></p>
+      <p>Yaratgan: <a href="https://github.com/sanjarbey" target="_blank">Sanjarbek Sharifboyevich</a></p>
     </footer>
   </div>
 
